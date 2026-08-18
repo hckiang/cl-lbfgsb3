@@ -40,7 +40,11 @@
         (with-open-file (in path :element-type '(unsigned-byte 8)
                                  :direction :input)
           (let* ((len  (file-length in))
-                 (buf  (make-array len :element-type '(unsigned-byte 8))))
+                 (buf  (make-array len :element-type '(unsigned-byte 8)
+                                       #+lispworks
+                                       :allocation
+                                       #+lispworks
+                                       :static)))
             (read-sequence buf in)
             (setf *lbfgsb3-so-bytes* buf)
             ;; (format t "~&[linking] loaded ~A bytes of liblbfgsb3.so into memory~%"

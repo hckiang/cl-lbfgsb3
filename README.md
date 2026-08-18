@@ -28,7 +28,7 @@ On FreeBSD there's no such restriction.
 
 ## Supported platforms
 
-SBCL, ClozureCL on Linux and FreeBSD.
+LispWorks, SBCL, ClozureCL on Linux and FreeBSD.
 
 ## Extending to other platforms
 
