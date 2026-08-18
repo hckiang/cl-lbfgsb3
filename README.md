@@ -1,4 +1,6 @@
-# cl+lbfgs3
+![Lisp alien propaganda](https://www.lisperati.com/lisplogo_fancy_256.png)
+
+# cl+lbfgsb3
 
 An Common Lisp FFI for the 2011 version of L-BFGS-B (C. Zhu, R. H. Byrd and J. Nocedal
 1997).
@@ -9,16 +11,16 @@ R language, taken from Nash's lbfgsb3c R package.
 
 ## Multi-threading support
 
-This library supports being called simultaneously from different thread optimising
+This library supports being called simultaneously from different threads optimising
 different functions. From the user's side, no locking is needed (of course if your
 objective function or gradients do something unsafe you still need to lock).
 
 The original Fortran code cannot be run concurrently even if objective functions
-and gradients does only pure side-effect-free arithmetics, due to the use of
+and gradients do only pure side-effect-free arithmetics, due to the use of
 COMMON and SAVE etc in Fortran. To circumvant this, this pacakge `dlopen` and
-`dlclose` every time the optimisation is requested.
+`dlclose` every time an optimisation is requested.
 
-On Linux, you can only have as many threads as maximum usable amount of file
+On Linux, you can only have as many threads as the maximum usable amount of file
 descriptors because we mmap to a file descriptor to pass to dlopen, and glibc
 path-caches dlopen, forcing us to wait till the time for dlclose before we can
 close the file descriptor. I don't know if this caching means they have to
@@ -34,25 +36,26 @@ LispWorks, SBCL, ClozureCL on Linux and FreeBSD.
 
 If you are interested in making it work on Mac or Windows, take a look
 at linking.c. I am not proficient enough in Mac and Windows (nor have access to)
-to know how `load_library_from_memory` should look like in those platforms.
+to know how `load_library_from_memory` should look like on those platforms.
 Contribution is welcome.
 
 ## Notes on usage
 
-When using this library, make sure all returned by your function are `double-float`.
+When using this library, make sure all values accepted and returned by your function
+are `double-float`.
 
 It is okay to throw signals etc in your objective function and gradients. If gradients
-isn't supplied a simple finite diff is used to approximate it, but it does not do anything
+isn't supplied, a simple finite diff is used to approximate it, but it does not do anything
 especially sophisticated; if you experience numerical problems, you are advised to use
 a better algorithm for gradient approximation.
 
 SBCL has [systematically broken ISO/IEC 10967-2:2001 conformance](https://bugs.launchpad.net/sbcl/+bug/2160268)
-and qNaN sometimes can throw. The link above is about log, but as of 2026 many other
-math functions that has a range check is broken when it comes to qNaN. Also, SBCL
+that math operations on qNaN sometimes can throw. The link above is about logarithm, but as of 2026 many other
+math functions that have a range check are broken when it comes to qNaN. Also, SBCL
 does some low-level signalling for invalid floating point operations, even if this
 happens in a foreign library. For all these reasons, you must `handler-case` against 
 your objective function and gradients on SBCL. For serious numerical work with
-complicated likelihood from messy data, Clozure or one of commercial implementation
+complicated likelihood from messy data, Clozure or one of the commercial implementations
 would perhaps give you less surprises.
 
 ## Example

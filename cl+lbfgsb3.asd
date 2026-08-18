@@ -53,7 +53,7 @@
 (defsystem "cl+lbfgsb3/test"
   :depends-on ("cl+lbfgsb3"
                "bordeaux-threads"
-               "fiveam")                  ; or prove, parachute, …
+               "fiveam")
   :serial t
   :components ((:module "test"
                 :components
